@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
+import { getUserRole } from '../../../utils/utils';
 
 @Component({
     selector: 'app-menu',
@@ -17,9 +18,34 @@ import { AppMenuitem } from './app.menuitem';
 })
 export class AppMenu {
     model: MenuItem[] = [];
+    userRole: number | null = null;
 
     ngOnInit() {
-        this.model = [
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.userRole = getUserRole(token);
+        }
+
+        this.model = this.getMenuItems(this.userRole);
+    }
+
+    getMenuItems(type: number | null): MenuItem[] {
+        if (type == 1) {
+            return [
+                {
+                    label: 'Home',
+                    items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
+                },
+            ];
+        } else if (type == 2) {
+            return [
+                {
+                    label: 'Home',
+                    items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
+                },
+            ];
+        }
+        return [
             {
                 label: 'Home',
                 items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]

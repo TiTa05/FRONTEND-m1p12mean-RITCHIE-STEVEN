@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+import { Location } from '@angular/common'; // Importer le service Location
 
 @Component({
     selector: 'app-error',
@@ -21,7 +22,7 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
                             <span class="text-muted-color mb-8">Requested resource is not available.</span>
                             <img src="https://primefaces.org/cdn/templates/sakai/auth/asset-error.svg" alt="Error" class="mb-8" width="80%" />
                             <div class="col-span-12 mt-8 text-center">
-                                <p-button label="Go to Dashboard" routerLink="/" severity="danger" />
+                                <p-button label="Go Back" (onClick)="goBack()" severity="danger" />
                             </div>
                         </div>
                     </div>
@@ -29,4 +30,11 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
             </div>
         </div>`
 })
-export class Error {}
+export class Error {
+    constructor(private location: Location) {} // Injecter le service Location
+
+    // Méthode pour revenir à la page précédente
+    goBack(): void {
+        this.location.back();
+    }
+}
