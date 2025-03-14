@@ -6,12 +6,8 @@ export interface DecodedToken {
     exp?: number;
     [key: string]: any;
 }
-export function decodeToken(token: string): DecodedToken | null {
-    try {
+export function decodeToken(token: string): DecodedToken {
         return jwtDecode<DecodedToken>(token);
-    } catch (error) {
-        return null;
-    }
 }
 
 export function getUserRole(token: string): number | null {
