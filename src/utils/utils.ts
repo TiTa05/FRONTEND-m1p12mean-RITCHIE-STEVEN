@@ -1,11 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
+import { DecodedToken} from '../app/models/decodeToken.interface';
 
-export interface DecodedToken {
-    type?: number;
-    role?: string;
-    exp?: number;
-    [key: string]: any;
-}
 export function decodeToken(token: string): DecodedToken {
         return jwtDecode<DecodedToken>(token);
 }

@@ -9,6 +9,7 @@ import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 import { ApiRoutes } from '../../api/api.routes';
 import { CommonModule } from '@angular/common';
+import { ApiCalls } from '../../api/api-calls.abstractclass';
 
 @Component({
     selector: 'app-login',
@@ -40,6 +41,11 @@ import { CommonModule } from '@angular/common';
                             </div>
 
                             <p-button label="Sign In" styleClass="w-full" (click)="login()"></p-button>
+                            <div class="text-center mt-6">
+                                <span class="text-muted-color">Don't have an account?</span>
+                                <a class="font-medium text-primary cursor-pointer ml-2" (click)="navigateToSignUp()">Sign Up</a>
+                                <span class="text-muted-color"> ( for client )</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -47,15 +53,15 @@ import { CommonModule } from '@angular/common';
         </div>
     `
 })
-export class Login {
+export class Login extends ApiCalls {
     email: string = '';
     password: string = '';
     errorMessage: string | null = null;
 
     constructor(
-        private apiRoutes: ApiRoutes,
+        apiRoutes: ApiRoutes,
         private router: Router
-    ) {}
+    ) { super(apiRoutes); }
 
     login(): void {
         const loginData = {
@@ -76,5 +82,9 @@ export class Login {
                 this.errorMessage = 'Invalid email or password. Please try again.';
             }
         });
+    }
+
+    navigateToSignUp() {
+        this.router.navigate(['/auth/signUp']);
     }
 }

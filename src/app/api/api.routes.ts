@@ -7,8 +7,9 @@ import { ApiService } from './api.service';
     providedIn: 'root'
 })
 export class ApiRoutes {
-    private host = 'http://localhost:3000';
+    private host = 'http://localhost:5000';
     private loginUrl = `${this.host}/login`;
+    private clientUrl = `${this.host}/auth/client`;
     private articleUrl = `${this.host}/articles`;
 
     constructor(private apiService: ApiService) {}
@@ -16,6 +17,10 @@ export class ApiRoutes {
     // login
     login(data: any): Observable<any> {
         return this.apiService.postCall(this.loginUrl, data, false);
+    }
+    // client
+    signUp(data: any): Observable<any> {
+        return this.apiService.postCall(this.clientUrl, data, false);
     }
     // articles test
     getArticles(): Observable<any> {

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiRoutes } from '../../api/api.routes';
 import { ApiCalls } from '../../api/api-calls.abstractclass';
-import { jwtDecode } from 'jwt-decode';
 @Component({
     selector: 'app-example',
     standalone: true,
