@@ -268,7 +268,7 @@ export class SignUp extends ApiCalls implements OnInit {
         if (this.selectedFile) {
             formData.append('picture', this.selectedFile);
         }
-        
+
         this.apiRoutes.signUp(formData).subscribe({
             next: () => {
                 this.messageService.add({
@@ -280,11 +280,12 @@ export class SignUp extends ApiCalls implements OnInit {
                     this.navigateToLogin();
                 }, 2000);
             },
-            error: () => {
+            error: (err: any) => {
+                const errorMessage = err.error?.message || 'An unexpected error occurred. Please try again later.';
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Registration Failed',
-                    detail: 'There was an error creating your account. Please try again.'
+                    detail: errorMessage
                 });
             }
         });

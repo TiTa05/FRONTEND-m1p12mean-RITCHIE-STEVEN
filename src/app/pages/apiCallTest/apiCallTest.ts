@@ -13,6 +13,7 @@ import { ApiCalls } from '../../api/api-calls.abstractclass';
             <button (click)="testPost()">Tester POST</button>
             <button (click)="testPut()">Tester PUT</button>
             <button (click)="testDelete()">Tester DELETE</button>
+            <button (click)="testGetClient()">Tester Client GET</button>
             <div *ngIf="response">
                 <h2>Réponse :</h2>
                 <pre>{{ response | json }}</pre>
@@ -68,6 +69,15 @@ export class ApiCallTest extends ApiCalls implements OnInit {
                 console.log('DELETE Response: Article supprimé');
             },
             error: (err) => console.error('Erreur DELETE:', err)
+        });
+    }
+
+    testGetClient(): void {
+        this.apiRoutes.getClients().subscribe({
+            next: (data) => {
+                this.response = data;
+            },
+            error: (err) => console.error('Erreur:', err)
         });
     }
 }

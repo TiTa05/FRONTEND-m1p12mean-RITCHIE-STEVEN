@@ -34,22 +34,34 @@ export class AppMenu {
             return [
                 {
                     label: 'Home',
-                    items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
-                },
+                    items: [
+                        { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
+                    ]
+                }
             ];
         } else if (type == 2) {
             return [
                 {
                     label: 'Home',
-                    items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
-                },
+                    items: [
+                        { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+                        { label: 'Client', icon: 'pi pi-fw pi-home', items: [
+                            { label: 'Client list', icon: 'pi pi-fw pi-home', routerLink: ['/client/list'] }
+                        ] }
+                ]
+                }
             ];
         }
         return [
             {
                 label: 'Home',
-                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
-            },
+                items: [
+                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+                    { label: 'Client', icon: 'pi pi-fw pi-home', items: [
+                        { label: 'Client list', icon: 'pi pi-fw pi-home', routerLink: ['/client/list'] }
+                    ] }
+            ]
+            }
         ];
     }
 }
