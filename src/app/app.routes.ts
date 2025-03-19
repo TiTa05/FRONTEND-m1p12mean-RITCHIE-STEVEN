@@ -15,7 +15,7 @@ export const appRoutes: Routes = [
             { path: '', component: Empty, canActivate: [authGuard], data: { type: [1, 2] } }, 
             { path: 'pages', loadChildren: () => import('./pages/pages.routes'),  canActivate: [authGuard] },
             { path: 'apiCallTest', component: ApiCallTest,  canActivate: [authGuard],  data: { type: [1, 2] } },
-            {path: 'client', loadChildren: () => import('./pages/client/client.routes'), canActivate: [authGuard],  data: { type: [2, 3] } },
+            {path: 'client', loadChildren: () => import('./pages/client/client.routes')},
         ]
     },
     { path: 'notfound', component: Notfound },
