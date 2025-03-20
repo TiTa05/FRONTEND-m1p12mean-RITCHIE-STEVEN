@@ -11,6 +11,8 @@ export class ApiRoutes {
     private loginUrl = `${this.host}/auth/login`;
     private clientUrl = `${this.host}/auth/client`;
     private articleUrl = `${this.host}/articles`;
+    private brandUrl = `${this.host}/brand`;
+    private vehicleUrl = `${this.host}/vehicle`;
 
     constructor(private apiService: ApiService) {}
 
@@ -18,6 +20,53 @@ export class ApiRoutes {
     login(data: any): Observable<any> {
         return this.apiService.postCall(this.loginUrl, data, false);
     }
+
+    // vehicle
+    getVehicles(): Observable<any> {
+        return this.apiService.getCall(this.vehicleUrl);
+    }
+
+    getVehicleById(id: string): Observable<any> {
+        return this.apiService.getCall(`${this.vehicleUrl}/${id}`);
+    }
+
+    getVehicleByClientId(id: string): Observable<any> {
+        return this.apiService.getCall(`${this.vehicleUrl}/client/${id}`);
+    }
+
+    postVehicle(data: any): Observable<any> {
+        return this.apiService.postCall(this.vehicleUrl, data);
+    }
+
+    putVehicle(id: string, data: any): Observable<any> {
+        return this.apiService.putCall(`${this.vehicleUrl}/${id}`, data);
+    }
+
+    deleteVehicle(id: string): Observable<any> {
+        return this.apiService.deleteCall(`${this.vehicleUrl}/${id}`);
+    }
+
+    // brand
+    getBrands(): Observable<any> {
+        return this.apiService.getCall(this.brandUrl);
+    }
+
+    getBrandById(id: string): Observable<any> {
+        return this.apiService.getCall(`${this.brandUrl}/${id}`);
+    }
+
+    postBrand(data: any): Observable<any> {
+        return this.apiService.postCall(this.brandUrl, data);
+    }
+
+    putBrand(id: string, data: any): Observable<any> {
+        return this.apiService.putCall(`${this.brandUrl}/${id}`, data);
+    }
+
+    deleteBrand(id: string): Observable<any> {
+        return this.apiService.deleteCall(`${this.brandUrl}/${id}`);
+    }
+
     // client
     signUp(data: any): Observable<any> {
         return this.apiService.postCall(this.clientUrl, data, false);
@@ -35,7 +84,7 @@ export class ApiRoutes {
         return this.apiService.postCall(this.articleUrl, data);
     }
 
-    putArticles(id: number,data: any): Observable<any> {
+    putArticles(id: number, data: any): Observable<any> {
         return this.apiService.putCall(`${this.articleUrl}/${id}`, data);
     }
 

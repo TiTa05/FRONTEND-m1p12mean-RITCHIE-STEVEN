@@ -14,3 +14,14 @@ export function getUserRole(token: string): number | null {
 
     return null;
 }
+
+
+export function getUserId(token: string): string | null {
+    const decodedToken = decodeToken(token);
+
+    if (decodedToken && decodedToken.id) {
+        return decodedToken.id;
+    }
+
+    return null;
+}

@@ -5,7 +5,6 @@ import { Notfound } from './pages/notfound/notfound';
 import { ApiCallTest } from './pages/apiCallTest/apiCallTest';
 import { authGuard } from './routes/auth.guard';
 import { Error } from './pages/auth/error';
-import { ClientList } from './pages/client/clientList';
 
 export const appRoutes: Routes = [
     {
@@ -16,6 +15,7 @@ export const appRoutes: Routes = [
             { path: 'pages', loadChildren: () => import('./pages/pages.routes'),  canActivate: [authGuard] },
             { path: 'apiCallTest', component: ApiCallTest,  canActivate: [authGuard],  data: { type: [1, 2] } },
             {path: 'client', loadChildren: () => import('./pages/client/client.routes')},
+            { path: 'vehicle',  loadChildren: () => import('./pages/vehicle/vehicle.routes') },
         ]
     },
     { path: 'notfound', component: Notfound },

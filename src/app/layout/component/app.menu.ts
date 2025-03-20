@@ -35,7 +35,8 @@ export class AppMenu {
                 {
                     label: 'Home',
                     items: [
-                        { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
+                        { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+                        { label: 'My Vehicle', icon: 'pi pi-fw pi-home', routerLink: ['/vehicle/crud'] }
                     ]
                 }
             ];
@@ -47,7 +48,10 @@ export class AppMenu {
                         { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
                         { label: 'Client', icon: 'pi pi-fw pi-home', items: [
                             { label: 'Client list', icon: 'pi pi-fw pi-home', routerLink: ['/client/list'] }
-                        ] }
+                        ] },
+                        { label: 'Vehicle', icon: 'pi pi-fw pi-home', items: [
+                            { label: 'Brand', icon: 'pi pi-fw pi-home', routerLink: ['/vehicle/brand'] }
+                        ] },
                 ]
                 }
             ];
@@ -59,7 +63,10 @@ export class AppMenu {
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
                     { label: 'Client', icon: 'pi pi-fw pi-home', items: [
                         { label: 'Client list', icon: 'pi pi-fw pi-home', routerLink: ['/client/list'] }
-                    ] }
+                    ] },
+                    { label: 'Vehicle', icon: 'pi pi-fw pi-home', items: [
+                        { label: 'Brand', icon: 'pi pi-fw pi-home', routerLink: ['/vehicle/brand'] }
+                    ] },
             ]
             }
         ];

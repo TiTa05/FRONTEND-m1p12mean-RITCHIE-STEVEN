@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTableComponent, ColumnDefinition } from '../../layout/component/app.datatable';
 import { TagModule } from 'primeng/tag';
@@ -15,7 +15,7 @@ import { User } from '../../models/user.interface';
         <p-toast></p-toast>
         <app-data-table
             [title]="'Clients'"
-            [data]="users"
+            [data]="users()"
             [columns]="columns"
             [loading]="loading"
             [globalFilterFields]="['firstName', 'lastName', 'email', 'phoneNumber']"
@@ -25,7 +25,7 @@ import { User } from '../../models/user.interface';
     providers: [MessageService]
 })
 export class ClientList extends ApiCalls implements OnInit {
-    users: User[] = [];
+    users = signal<User[]>([]);
     loading: boolean = true;
 
     columns: ColumnDefinition[] = [
@@ -71,7 +71,7 @@ export class ClientList extends ApiCalls implements OnInit {
     ngOnInit() {
         this.apiRoutes.getClients().subscribe({
             next: (data) => {
-                this.users = data;
+                this.users.set(data);
                 this.loading = false;
             },
             error: (err: any) => {
