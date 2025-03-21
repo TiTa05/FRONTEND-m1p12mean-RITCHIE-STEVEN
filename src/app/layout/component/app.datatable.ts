@@ -181,9 +181,7 @@ export interface ColumnDefinition {
                                                 <img
                                                     [alt]="resolveFieldValue(rowData, col.field + '.name')"
                                                     [src]="'data:image/jpeg;base64,' + resolveFieldValue(rowData, col.field)"
-                                                    width="100"
-                                                    height="100"
-                                                    style="border-radius: .25rem; object-fit: cover;"
+                                                    style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"
                                                 />
                                             </ng-container>
 

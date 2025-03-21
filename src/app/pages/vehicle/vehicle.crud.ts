@@ -374,7 +374,6 @@ export class VehicleCRUD extends ApiCalls implements OnInit {
 
         if (this.vehicle.registrationNumber?.trim() && this.vehicle.brandId?.trim() && this.vehicle.model?.trim() && this.vehicle.color?.trim() && this.vehicle.energy?.trim()) {
             if (this.vehicle._id) {
-                // Update an existing vehicle
                 this.apiRoutes.putVehicle(this.vehicle._id, this.vehicle).subscribe({
                     next: (updatedVehicle) => {
                         const index = this.findIndexById(this.vehicle._id);

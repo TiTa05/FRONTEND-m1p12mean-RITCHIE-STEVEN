@@ -8,4 +8,6 @@ export interface User {
     type: number;
     createdAt: string;
     updatedAt: string;
+    password: string;
+    salary: number;
 }

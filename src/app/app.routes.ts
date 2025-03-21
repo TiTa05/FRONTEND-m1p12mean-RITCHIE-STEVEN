@@ -11,11 +11,12 @@ export const appRoutes: Routes = [
         path: '',
         component: AppLayout,
         children: [
-            { path: '', component: Empty, canActivate: [authGuard], data: { type: [1, 2] } }, 
+            { path: '', component: Empty, canActivate: [authGuard], data: { type: [1, 2, 3] } }, 
             { path: 'pages', loadChildren: () => import('./pages/pages.routes'),  canActivate: [authGuard] },
-            { path: 'apiCallTest', component: ApiCallTest,  canActivate: [authGuard],  data: { type: [1, 2] } },
+            { path: 'apiCallTest', component: ApiCallTest,  canActivate: [authGuard],  data: { type: [1, 2, 3] } },
             {path: 'client', loadChildren: () => import('./pages/client/client.routes')},
             { path: 'vehicle',  loadChildren: () => import('./pages/vehicle/vehicle.routes') },
+            { path: 'mechanic',  loadChildren: () => import('./pages/mechanic/mechanic.routes') },
         ]
     },
     { path: 'notfound', component: Notfound },
