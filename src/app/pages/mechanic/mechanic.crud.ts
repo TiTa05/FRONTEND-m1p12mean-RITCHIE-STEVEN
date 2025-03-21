@@ -22,7 +22,7 @@ import { ApiRoutes } from '../../api/api.routes';
 import { Column, ExportColumn } from '../../models/crud-component.interface';
 import { Country } from '../../models/country.interface';
 import { MechanicForm } from '../../models/mechanic-form.interface';
-
+import { COUNTRIES } from '../../../utils/utils';
 @Component({
     selector: 'app-mechanic-crud',
     standalone: true,
@@ -274,13 +274,7 @@ export class MechanicCRUD extends ApiCalls implements OnInit {
         private confirmationService: ConfirmationService
     ) {
         super(apiRoutes);
-        this.countries = [
-            { name: 'Madagascar', code: 'MG', flag: 'flag flag-mg', dialCode: '+261', format: '99 99 999 99' },
-            { name: 'France', code: 'FR', flag: 'flag flag-fr', dialCode: '+33', format: '9 99 99 99 99' },
-            { name: 'Japon', code: 'JP', flag: 'flag flag-jp', dialCode: '+81', format: '99 9999 9999' },
-            { name: 'Canada', code: 'CA', flag: 'flag flag-ca', dialCode: '+1', format: '999 999 9999' },
-            { name: 'Corée du Sud', code: 'KR', flag: 'flag flag-kr', dialCode: '+82', format: '999 9999 9999' }
-        ];
+        this.countries = COUNTRIES;
 
         this.selectedCountry = this.countries[0];
     }
