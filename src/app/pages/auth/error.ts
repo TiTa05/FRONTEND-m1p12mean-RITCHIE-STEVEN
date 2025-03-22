@@ -3,8 +3,7 @@ import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
-import { Location } from '@angular/common'; // Importer le service Location
-
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-error',
     imports: [ButtonModule, RippleModule, RouterModule, AppFloatingConfigurator, ButtonModule],
@@ -31,10 +30,9 @@ import { Location } from '@angular/common'; // Importer le service Location
         </div>`
 })
 export class Error {
-    constructor(private location: Location) {} // Injecter le service Location
+    constructor(private router: Router) {}
 
-    // Méthode pour revenir à la page précédente
     goBack(): void {
-        this.location.back();
+        this.router.navigate(['/']);
     }
 }

@@ -8,7 +8,6 @@ import { ToastModule } from 'primeng/toast';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
 import { RippleModule } from 'primeng/ripple';
-import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 import { ApiCalls } from '../../api/api-calls.abstractclass';
 import { ApiRoutes } from '../../api/api.routes';
 import { getUserId } from '../../../utils/utils';
@@ -16,10 +15,9 @@ import { getUserId } from '../../../utils/utils';
 @Component({
     selector: 'app-mechanic-update',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonModule, PasswordModule, ToastModule, MessagesModule, RippleModule, AppFloatingConfigurator],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonModule, PasswordModule, ToastModule, MessagesModule, RippleModule],
     providers: [MessageService],
     template: `
-        <app-floating-configurator />
         <div class="card p-6 shadow-md">
             <div class="text-center mb-6">
                 <h3 class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-2">Update Password</h3>

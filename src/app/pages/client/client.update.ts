@@ -13,7 +13,6 @@ import { RippleModule } from 'primeng/ripple';
 import { DividerModule } from 'primeng/divider';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
-import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 import { ApiCalls } from '../../api/api-calls.abstractclass';
 import { ApiRoutes } from '../../api/api.routes';
 import { Country } from '../../models/country.interface';
@@ -23,10 +22,9 @@ import { getUserId } from '../../../utils/utils';
 @Component({
     selector: 'app-user-update',
     standalone: true,
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonModule, InputTextModule, PasswordModule, FileUploadModule, ToastModule, MessagesModule, RippleModule, DividerModule, InputMaskModule, DropdownModule, AppFloatingConfigurator],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, ButtonModule, InputTextModule, PasswordModule, FileUploadModule, ToastModule, MessagesModule, RippleModule, DividerModule, InputMaskModule, DropdownModule],
     providers: [MessageService],
     template: `
-        <app-floating-configurator />
         <div class="card p-6 shadow-md">
             <div class="text-center mb-6">
                 <h3 class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-2">Update Profile</h3>
