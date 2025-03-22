@@ -299,7 +299,6 @@ export class MechanicCRUD extends ApiCalls implements OnInit {
         this.apiRoutes.getMechanics().subscribe({
             next: (data) => {
                 this.mechanics.set(data);
-                console.log(data);
             },
             error: (error) => {
                 this.messageService.add({

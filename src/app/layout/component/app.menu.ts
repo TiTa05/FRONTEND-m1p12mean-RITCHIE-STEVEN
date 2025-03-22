@@ -36,7 +36,8 @@ export class AppMenu {
                     label: 'Home',
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-                        { label: 'My Vehicle', icon: 'pi pi-fw pi-home', routerLink: ['/vehicle/crud'] }
+                        { label: 'My Vehicle', icon: 'pi pi-fw pi-home', routerLink: ['/vehicle/crud'] },
+                        { label: 'Update My Details', icon: 'pi pi-fw pi-user-edit', routerLink: ['/client/update'] }
                     ]
                 }
             ];
@@ -46,6 +47,7 @@ export class AppMenu {
                     label: 'Home',
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+                        { label: 'Update My Password', icon: 'pi pi-fw pi-user-edit', routerLink: ['/mechanic/update'] }
                 ]
                 }
             ];

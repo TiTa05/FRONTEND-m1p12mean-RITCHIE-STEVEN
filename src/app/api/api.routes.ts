@@ -85,6 +85,14 @@ export class ApiRoutes {
     deleteUSer(id: string): Observable<any> {
         return this.apiService.deleteCall(`${this.userUrl}/${id}`);
     }
+
+    getUser(id: string): Observable<any> {
+        return this.apiService.getCall(`${this.userUrl}/${id}`);
+    }
+
+    putUser(id: string, data: any): Observable<any> {
+        return this.apiService.putCall(`${this.userUrl}/${id}`, data);
+    }
     // client
     signUp(data: any): Observable<any> {
         return this.apiService.postCall(this.clientUrl, data, false);
