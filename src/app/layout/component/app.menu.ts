@@ -36,7 +36,7 @@ export class AppMenu {
                     label: 'Home',
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-                        { label: 'My Vehicle', icon: 'pi pi-fw pi-home', routerLink: ['/vehicle/crud'] },
+                        { label: 'My Vehicle', icon: 'pi pi-fw pi-car', routerLink: ['/vehicle/crud'] },
                         { label: 'Update My Details', icon: 'pi pi-fw pi-user-edit', routerLink: ['/client/update'] }
                     ]
                 }
@@ -48,24 +48,42 @@ export class AppMenu {
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
                         { label: 'Update My Password', icon: 'pi pi-fw pi-user-edit', routerLink: ['/mechanic/update'] }
-                ]
+                    ]
                 }
             ];
         }
+        
+        // Pour l'Admin (ou un rôle qui gère les réparations)
         return [
             {
                 label: 'Home',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-                    { label: 'User', icon: 'pi pi-fw pi-home', items: [
-                        { label: 'Client list', icon: 'pi pi-fw pi-home', routerLink: ['/client/list'] },
-                        { label: 'Mechanic', icon: 'pi pi-fw pi-home', routerLink: ['/mechanic/CRUD'] }
-                    ] },
-                    { label: 'Vehicle', icon: 'pi pi-fw pi-home', items: [
-                        { label: 'Brand', icon: 'pi pi-fw pi-home', routerLink: ['/vehicle/brand'] }
-                    ] },
-            ]
+                    {
+                        label: 'User',
+                        icon: 'pi pi-fw pi-users',
+                        items: [
+                            { label: 'Client list', icon: 'pi pi-fw pi-user', routerLink: ['/client/list'] },
+                            { label: 'Mechanic', icon: 'pi pi-fw pi-tools', routerLink: ['/mechanic/CRUD'] }
+                        ]
+                    },
+                    {
+                        label: 'Vehicle',
+                        icon: 'pi pi-fw pi-car',
+                        items: [
+                            { label: 'Brand', icon: 'pi pi-fw pi-tag', routerLink: ['/vehicle/brand'] }
+                        ]
+                    },
+                    {
+                        label: 'Reparation Type',
+                        icon: 'pi pi-fw pi-wrench',
+                        items: [
+                            { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/CRUD'] }
+                        ]
+                    }
+                ]
             }
         ];
     }
+    
 }

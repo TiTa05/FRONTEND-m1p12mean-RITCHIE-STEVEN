@@ -17,6 +17,7 @@ export const appRoutes: Routes = [
             {path: 'client', loadChildren: () => import('./pages/client/client.routes')},
             { path: 'vehicle',  loadChildren: () => import('./pages/vehicle/vehicle.routes') },
             { path: 'mechanic',  loadChildren: () => import('./pages/mechanic/mechanic.routes') },
+	    { path: 'reparation', loadChildren: () => import('./pages/reparation/reparation.routes') },
         ]
     },
     { path: 'notfound', component: Notfound },
