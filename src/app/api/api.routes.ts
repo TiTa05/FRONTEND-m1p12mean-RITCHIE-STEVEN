@@ -16,6 +16,7 @@ export class ApiRoutes {
     private brandUrl = `${this.host}/brand`;
     private vehicleUrl = `${this.host}/vehicle`;
     private reparationUrl = `${this.host}/reparation`;
+    private fleetUrl = `${this.host}/fleet`;
 
     constructor(private apiService: ApiService) {}
 
@@ -137,5 +138,14 @@ export class ApiRoutes {
     
     deleteReparation(id: string): Observable<any> {
         return this.apiService.deleteCall(`${this.reparationUrl}/${id}`);
+    }
+
+    // fleet
+    getFleets(): Observable<any> {
+        return this.apiService.getCall(this.fleetUrl);
+    }
+
+    clearFleetsVehicle(): Observable<any> {
+        return this.apiService.getCall(`${this.fleetUrl}/clear-vehicles`);
     }
 }

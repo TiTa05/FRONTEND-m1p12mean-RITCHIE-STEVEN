@@ -53,7 +53,6 @@ export class AppMenu {
             ];
         }
         
-        // Pour l'Admin (ou un rôle qui gère les réparations)
         return [
             {
                 label: 'Home',
@@ -79,6 +78,13 @@ export class AppMenu {
                         icon: 'pi pi-fw pi-wrench',
                         items: [
                             { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/CRUD'] }
+                        ]
+                    },
+                    {
+                        label: 'vehicle fleet',
+                        icon: 'pi pi-fw pi-wrench',
+                        items: [
+                            { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/fleet/list'] }
                         ]
                     }
                 ]
