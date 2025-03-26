@@ -68,7 +68,7 @@ import { ApiCalls } from '../../api/api-calls.abstractclass';
     `
 })
 export class Login extends ApiCalls {
-    email: string = 'admin@gmail.com';
+    email: string = 'manager@gmail.com';
     password: string = 'Qwerty123';
     errorMessage: string | null = null;
 
@@ -88,7 +88,7 @@ export class Login extends ApiCalls {
     onRoleChange(): void {
         switch (this.selectedRole) {
             case 'manager':
-                this.email = 'admin@gmail.com';
+                this.email = 'manager@gmail.com';
                 this.password = 'Qwerty123';
                 break;
             case 'mechanic':
