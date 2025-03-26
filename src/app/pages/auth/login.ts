@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
+import { DividerModule } from 'primeng/divider';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 import { ApiRoutes } from '../../api/api.routes';
 import { CommonModule } from '@angular/common';
@@ -14,7 +15,7 @@ import { ApiCalls } from '../../api/api-calls.abstractclass';
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RippleModule, AppFloatingConfigurator, CommonModule],
+    imports: [ButtonModule, DropdownModule, InputTextModule, PasswordModule, FormsModule, RippleModule, DividerModule, AppFloatingConfigurator, CommonModule],
     template: `
         <app-floating-configurator />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
@@ -28,6 +29,19 @@ import { ApiCalls } from '../../api/api-calls.abstractclass';
                             <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Garage</div>
                             <span class="text-muted-color font-medium">Sign in to continue</span>
                         </div>
+
+                        <div class="mb-6">
+                            <p-dropdown 
+                                [options]="roles" 
+                                [(ngModel)]="selectedRole" 
+                                placeholder="Select Role"
+                                (onChange)="onRoleChange()" 
+                                class="w-full md:w-[30rem]"
+                            >
+                            </p-dropdown>
+                        </div>
+
+                        <p-divider></p-divider>
 
                         <div>
                             <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
@@ -54,14 +68,39 @@ import { ApiCalls } from '../../api/api-calls.abstractclass';
     `
 })
 export class Login extends ApiCalls {
-    email: string = '';
-    password: string = '';
+    email: string = 'admin@gmail.com';
+    password: string = 'Qwerty123';
     errorMessage: string | null = null;
+
+    roles = [
+        { label: 'Manager', value: 'manager' },
+        { label: 'Mechanic', value: 'mechanic' },
+        { label: 'Client', value: 'client' }
+    ];
+
+    selectedRole: string = 'manager';
 
     constructor(
         apiRoutes: ApiRoutes,
         private router: Router
     ) { super(apiRoutes); }
+
+    onRoleChange(): void {
+        switch (this.selectedRole) {
+            case 'manager':
+                this.email = 'admin@gmail.com';
+                this.password = 'Qwerty123';
+                break;
+            case 'mechanic':
+                this.email = 'venhom@gmail.com';
+                this.password = 'Qwerty123';
+                break;
+            case 'client':
+                this.email = 'test@gmail.com';
+                this.password = 'Qwerty123';
+                break;
+        }
+    }
 
     login(): void {
         const loginData = {
