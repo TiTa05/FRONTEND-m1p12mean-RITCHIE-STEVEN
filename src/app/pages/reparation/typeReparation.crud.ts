@@ -12,7 +12,6 @@ import { DialogModule } from 'primeng/dialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ApiCalls } from '../../api/api-calls.abstractclass';
 import { ApiRoutes } from '../../api/api.routes';
 import { Reparation } from '../../models/reparation.interface';
 import { Column, ExportColumn } from '../../models/crud-component.interface';
@@ -22,33 +21,44 @@ import { Column, ExportColumn } from '../../models/crud-component.interface';
     standalone: true,
     imports: [
         CommonModule, TableModule, FormsModule, ButtonModule, RippleModule, ToastModule, 
-        ToolbarModule, InputTextModule, DialogModule, ConfirmDialogModule
+        ToolbarModule, InputTextModule, DialogModule, InputIconModule, IconFieldModule, 
+        ConfirmDialogModule
     ],
     template: `
         <p-toast></p-toast>
-        <p-toolbar class="mb-6">
+        <p-toolbar styleClass="mb-6">
             <ng-template #start>
                 <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
                 <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedReparations()" [disabled]="!selectedReparations || !selectedReparations.length" />
+            </ng-template>
+
+            <ng-template #end>
+                <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
             </ng-template>
         </p-toolbar>
 
         <p-table
             #dt
-            [value]="reparations"
+            [value]="reparations()"
             [rows]="10"
+            [columns]="cols"
             [paginator]="true"
             [globalFilterFields]="['label', 'cost']"
+            [tableStyle]="{ 'min-width': '75rem' }"
             [(selection)]="selectedReparations"
             [rowHover]="true"
             dataKey="_id"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} reparations"
             [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 20, 30]"
         >
             <ng-template #caption>
                 <div class="flex items-center justify-between">
                     <h5 class="m-0">Reparation Management</h5>
-                    <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
+                    </p-iconfield>
                 </div>
             </ng-template>
             <ng-template #header>
@@ -56,16 +66,24 @@ import { Column, ExportColumn } from '../../models/crud-component.interface';
                     <th style="width: 3rem">
                         <p-tableHeaderCheckbox />
                     </th>
-                    <th pSortableColumn="label">Label <p-sortIcon field="label" /></th>
-                    <th pSortableColumn="cost">Cost <p-sortIcon field="cost" /></th>
+                    <th pSortableColumn="label" style="min-width:16rem">
+                        Label
+                        <p-sortIcon field="label" />
+                    </th>
+                    <th pSortableColumn="cost" style="min-width:12rem">
+                        Cost
+                        <p-sortIcon field="cost" />
+                    </th>
                     <th style="min-width: 12rem"></th>
                 </tr>
             </ng-template>
             <ng-template #body let-reparation>
                 <tr>
-                    <td><p-tableCheckbox [value]="reparation" /></td>
-                    <td>{{ reparation.label }}</td>
-                    <td>{{ reparation.cost }}</td>
+                    <td style="width: 3rem">
+                        <p-tableCheckbox [value]="reparation" />
+                    </td>
+                    <td style="min-width: 16rem">{{ reparation.label }}</td>
+                    <td style="min-width: 12rem">{{ reparation.cost }}</td>
                     <td>
                         <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editReparation(reparation)" />
                         <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteReparation(reparation)" />
@@ -74,8 +92,8 @@ import { Column, ExportColumn } from '../../models/crud-component.interface';
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="7">
-                        <p>No type available at the moment.</p>
+                    <td colspan="4">
+                        <p>No reparations available at the moment.</p>
                     </td>
                 </tr>
             </ng-template>
@@ -86,12 +104,12 @@ import { Column, ExportColumn } from '../../models/crud-component.interface';
                 <div class="flex flex-col gap-6">
                     <div>
                         <label for="label" class="block font-bold mb-3">Label</label>
-                        <input type="text" pInputText id="label" [(ngModel)]="reparation.label" required />
-                        <small class="text-red-500" *ngIf="submitted && !reparation.label">Type is required.</small>
+                        <input type="text" pInputText id="label" [(ngModel)]="reparation.label" required autofocus fluid/>
+                        <small class="text-red-500" *ngIf="submitted && !reparation.label">Label is required.</small>
                     </div>
                     <div>
                         <label for="cost" class="block font-bold mb-3">Cost</label>
-                        <input type="number" pInputText id="cost" [(ngModel)]="reparation.cost" required />
+                        <input type="number" pInputText id="cost" [(ngModel)]="reparation.cost" required fluid/>
                         <small class="text-red-500" *ngIf="submitted && !reparation.cost">Cost is required.</small>
                     </div>
                 </div>
@@ -107,11 +125,14 @@ import { Column, ExportColumn } from '../../models/crud-component.interface';
     providers: [MessageService, ConfirmationService]
 })
 export class ReparationCRUD implements OnInit {
-    reparations: Reparation[] = [];
     reparationDialog: boolean = false;
+    reparations = signal<Reparation[]>([]);
     reparation: Reparation = { label: '', cost: 0 };
     selectedReparations: Reparation[] | null = null;
     submitted: boolean = false;
+    @ViewChild('dt') dt!: Table;
+    cols!: Column[];
+    exportColumns!: ExportColumn[];
 
     constructor(
         private apiRoutes: ApiRoutes,
@@ -121,16 +142,30 @@ export class ReparationCRUD implements OnInit {
 
     ngOnInit(): void {
         this.loadReparations();
+        this.cols = [
+            { field: 'label', header: 'Label' },
+            { field: 'cost', header: 'Cost' }
+        ];
+        this.exportColumns = this.cols.map(col => ({ title: col.header, dataKey: col.field }));
+    }
+
+    exportCSV() {
+        this.dt.exportCSV();
     }
 
     loadReparations(): void {
         this.apiRoutes.getReparations().subscribe({
             next: (data: Reparation[]) => {
-                console.log("Fetched reparations:", data); // Debugging line
-                this.reparations = data;
+                this.reparations.set(data);
             },
             error: (err) => {
-                console.error("Error fetching reparations:", err);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Failed to load reparations',
+                    life: 3000
+                });
+                console.error("Error loading reparations:", err);
             }
         });
     }
@@ -154,12 +189,12 @@ export class ReparationCRUD implements OnInit {
             accept: () => {
                 if (reparation._id) {
                     this.apiRoutes.deleteReparation(reparation._id).subscribe({
-                        next: () => { 
-                            this.reparations = this.reparations.filter((val) => val._id !== reparation._id);
+                        next: () => {
+                            this.reparations.set(this.reparations().filter(r => r._id !== reparation._id));
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Success',
-                                detail: 'Repair deleted',
+                                detail: 'Reparation deleted',
                                 life: 3000
                             });
                         },
@@ -167,52 +202,46 @@ export class ReparationCRUD implements OnInit {
                             this.messageService.add({
                                 severity: 'error',
                                 summary: 'Error',
-                                detail: 'Failed to delete repair',
+                                detail: 'Failed to delete reparation',
                                 life: 3000
                             });
-                            console.error('Error deleting repair', error);
+                            console.error('Error deleting reparation', error);
                         }
                     });
-                } else {
-                    console.error("Reparation ID is undefined");
-                }                
+                }
             }
         });
     }
 
     deleteSelectedReparations(): void {
-        if (!this.selectedReparations || this.selectedReparations.length === 0) {
-            return;
-        }
-    
+        if (!this.selectedReparations || this.selectedReparations.length === 0) return;
+
         this.confirmationService.confirm({
-            message: 'Are you sure you want to delete the selected repairs?',
+            message: 'Are you sure you want to delete the selected reparations?',
             header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                const deletePromises: Promise<void>[] = (this.selectedReparations ?? []).map(reparation => {
+                const deletePromises = this.selectedReparations!.map(reparation => {
                     return new Promise<void>((resolve, reject) => {
-                        if (!reparation._id) {
-                            return reject("Reparation ID is null or undefined");
-                        }
-    
+                        if (!reparation._id) return reject('Missing reparation ID');
+                        
                         this.apiRoutes.deleteReparation(reparation._id).subscribe({
                             next: () => resolve(),
-                            error: (error) => reject(error)
+                            error: (err) => reject(err)
                         });
                     });
                 });
-    
+
                 Promise.all(deletePromises)
                     .then(() => {
-                        this.reparations = this.reparations.filter(r => 
-                            !this.selectedReparations!.some(sel => sel._id === r._id)
-                        );
+                        this.reparations.set(this.reparations().filter(r => 
+                            !this.selectedReparations!.some(s => s._id === r._id)
+                        ));
                         this.selectedReparations = null;
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',
-                            detail: 'Repairs deleted',
+                            detail: 'Reparations deleted',
                             life: 3000
                         });
                     })
@@ -220,17 +249,13 @@ export class ReparationCRUD implements OnInit {
                         this.messageService.add({
                             severity: 'error',
                             summary: 'Error',
-                            detail: 'Failed to delete some repairs',
+                            detail: 'Failed to delete some reparations',
                             life: 3000
                         });
-                    })
-                    .finally(() => {
-                        this.loadReparations();
                     });
             }
         });
     }
-    
 
     hideDialog(): void {
         this.reparationDialog = false;
@@ -243,16 +268,18 @@ export class ReparationCRUD implements OnInit {
 
     saveReparation(): void {
         this.submitted = true;
-    
-        if (!this.reparation.label?.trim()) return; // Prevent empty labels
-    
+
+        if (!this.reparation.label?.trim()) return;
+
         if (this.reparation._id) {
-            // Update existing reparation
             this.apiRoutes.putReparation(this.reparation._id, this.reparation).subscribe({
                 next: (updatedReparation) => {
-                    const index = this.findIndexById(this.reparation._id!);
-                    if (index !== -1) this.reparations[index] = updatedReparation;
-    
+                    const index = this.reparations().findIndex(r => r._id === updatedReparation._id);
+                    if (index !== -1) {
+                        const updated = [...this.reparations()];
+                        updated[index] = updatedReparation;
+                        this.reparations.set(updated);
+                    }
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Success',
@@ -271,14 +298,13 @@ export class ReparationCRUD implements OnInit {
                 }
             });
         } else {
-            // Create a new reparation
             this.apiRoutes.postReparation(this.reparation).subscribe({
                 next: (newReparation) => {
-                    this.reparations.push(newReparation);
+                    this.reparations.set([...this.reparations(), newReparation]);
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Success',
-                        detail: 'Reparation added',
+                        detail: 'Reparation created',
                         life: 3000
                     });
                     this.resetForm();
@@ -287,23 +313,17 @@ export class ReparationCRUD implements OnInit {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'Failed to add reparation',
+                        detail: 'Failed to create reparation',
                         life: 3000
                     });
                 }
             });
         }
     }
-    
-    // Utility method to reset form
+
     private resetForm(): void {
         this.reparation = { label: '', cost: 0 };
         this.reparationDialog = false;
-        this.loadReparations();
-    }
-    
-
-    findIndexById(id: string): number {
-        return this.reparations.findIndex(r => r._id === id);
+        this.submitted = false;
     }
 }
