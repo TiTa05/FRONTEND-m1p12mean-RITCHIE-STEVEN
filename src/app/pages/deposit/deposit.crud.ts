@@ -1,4 +1,3 @@
-
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -15,185 +14,211 @@ import { Deposit } from '../../models/deposit.interface';
 import { Vehicle } from '../../models/vehicle.interface';
 import { Reparation } from '../../models/reparation.interface';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextarea } from 'primeng/inputtextarea';
 import { ApiCalls } from '../../api/api-calls.abstractclass';
-
-import { Component, OnInit, ViewChild, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, signal, computed } from '@angular/core';
 import { getUserId } from '../../../utils/utils';
-
+import { ExportColumn, Column } from '../../models/crud-component.interface';
 @Component({
     selector: 'app-deposit-crud',
     standalone: true,
-    imports: [CommonModule, TableModule, FormsModule, ButtonModule, RippleModule, ToastModule, ToolbarModule, InputTextModule, DialogModule, InputIconModule, IconFieldModule, ConfirmDialogModule, AutoCompleteModule, DropdownModule],
+    imports: [
+        CommonModule,
+        TableModule,
+        FormsModule,
+        ButtonModule,
+        RippleModule,
+        ToastModule,
+        ToolbarModule,
+        InputTextModule,
+        DialogModule,
+        InputIconModule,
+        IconFieldModule,
+        ConfirmDialogModule,
+        AutoCompleteModule,
+        DropdownModule,
+        DatePickerModule,
+        InputTextarea,
+        MultiSelectModule
+    ],
     template: `
-      <p-toast></p-toast>
+        <p-toast></p-toast>
         <p-toolbar styleClass="mb-6">
-        <ng-template pTemplate="start">
-            <p-button label="New Deposit" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()"></p-button>
-            <p-button label="Delete" icon="pi pi-trash" severity="secondary" outlined (onClick)="deleteSelectedDeposits()" [disabled]="!selectedDeposits || !selectedDeposits.length"></p-button>
-        </ng-template>
-        <ng-template pTemplate="end">
-            <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()"></p-button>
-        </ng-template>
+            <ng-template pTemplate="start">
+                <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()"></p-button>
+                <p-button label="Delete" icon="pi pi-trash" severity="secondary" outlined (onClick)="deleteSelectedDeposits()" [disabled]="!selectedDeposits || !selectedDeposits.length"></p-button>
+            </ng-template>
+            <ng-template #end>
+                <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()"></p-button>
+            </ng-template>
         </p-toolbar>
 
         <p-table
-        #dt
-        [value]="deposits()"
-        [paginator]="true"
-        [rows]="10"
-        [globalFilterFields]="['vehicleId', 'typeReparationIds', 'appointmentDate', 'clientId', 'description']"
-        [dataKey]="'_id'"
-        [resizableColumns]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} deposits"
-        [showCurrentPageReport]="true"
-        [rowsPerPageOptions]="[10,20,30]"
-        [(selection)]="selectedDeposits"
-        [tableStyle]="{'min-width':'75rem'}"
+            #dt
+            [value]="deposits()"
+            [paginator]="true"
+            [rows]="10"
+            [columns]="cols"
+            [globalFilterFields]="['vehicleId', 'typeReparationIds', 'appointmentDate', 'clientId', 'description']"
+            [dataKey]="'_id'"
+            [resizableColumns]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} deposits"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [(selection)]="selectedDeposits"
+            [tableStyle]="{ 'min-width': '75rem' }"
         >
+            <ng-template #caption>
+                <div class="flex items-center justify-between">
+                    <h5 class="m-0">Deposit Management</h5>
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
+                    </p-iconfield>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:3rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th pSortableColumn="vehicleId">Vehicle <p-sortIcon field="vehicleId"></p-sortIcon></th>
+                    <th pSortableColumn="typeReparationIds">Repair Types <p-sortIcon field="typeReparationIds"></p-sortIcon></th>
+                    <th pSortableColumn="appointmentDate">Appointment Date <p-sortIcon field="appointmentDate"></p-sortIcon></th>
+                    <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
+                    <th pSortableColumn="totalPrice">Total Price <p-sortIcon field="totalPrice"></p-sortIcon></th>
+                    <th style="min-width: 12rem"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-deposit>
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="deposit"></p-tableCheckbox>
+                    </td>
+                    <td>{{ getVehicleInfo(deposit.vehicleId._id) }}</td>
+                    <td>{{ getReparationInfo(deposit.typeReparationIds) }}</td>
+                    <td>{{ deposit.appointmentDate | date: 'mediumDate' }}</td>
+                    <td>{{ deposit.description }}</td>
+                    <td>{{ calculateTotalPrice(deposit.typeReparationIds) | number: '1.0-0' }} Ar</td>
+                    <td>
+                        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editDeposit(deposit)"></p-button>
+                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteDeposit(deposit)"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">No deposits found.</td>
+                </tr>
+            </ng-template>
         </p-table>
 
-        <ng-template pTemplate="caption">
-        <div class="flex items-center justify-between">
-            <h5 class="m-0">Deposit Management</h5>
-            <span class="p-input-icon-left">
-            <i class="pi pi-search"></i>
-            <input pInputText type="text" (input)="handleFilter($event, dt)" placeholder="Search..." />
-            </span>
-        </div>
-        </ng-template>
+        <p-dialog [(visible)]="depositDialog" [style]="{ width: '550px' }" header="Deposit Details" [modal]="true">
+            <ng-template pTemplate="content">
+                <div class="p-fluid">
+                    <div class="field mb-4">
+                        <label for="vehicleId" class="font-bold mb-2 block">Vehicle</label>
+                        <p-autoComplete
+                            id="vehicleId"
+                            [suggestions]="filteredVehicles"
+                            (completeMethod)="filterVehicles($event)"
+                            field="registrationNumber"
+                            [dropdown]="true"
+                            [forceSelection]="true"
+                            [(ngModel)]="selectedVehicle"
+                            placeholder="Search for a vehicle"
+                            [required]="true"
+                            styleClass="w-full"
+                            (onSelect)="onVehicleSelect($event)"
+                        >
+                            <ng-template let-vehicle pTemplate="item">
+                                <div>{{ vehicle.registrationNumber }} - {{ vehicle.model }} - {{ vehicle.color }}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <small class="text-red-500" *ngIf="submitted && !deposit.vehicleId">Vehicle is required.</small>
+                    </div>
 
-        <ng-template pTemplate="header">
-        <tr>
-            <th style="width:3rem">
-            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            </th>
-            <th pSortableColumn="vehicleId">Vehicle ID <p-sortIcon field="vehicleId"></p-sortIcon></th>
-            <th pSortableColumn="typeReparationIds">Type Réparation <p-sortIcon field="typeReparationIds"></p-sortIcon></th>
-            <th pSortableColumn="appointmentDate">Appointment Date <p-sortIcon field="appointmentDate"></p-sortIcon></th>
-            <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
-            <th style="min-width: 12rem"></th>
-        </tr>
-        </ng-template>
+                    <div class="field mb-4">
+                        <label for="typeReparation" class="font-bold mb-2 block">Repair Types</label>
+                        <p-autoComplete
+                            id="typeReparation"
+                            [suggestions]="filteredRepairs"
+                            (completeMethod)="filterRepairs($event)"
+                            field="label"
+                            [dropdown]="true"
+                            [multiple]="true"
+                            [forceSelection]="true"
+                            [(ngModel)]="selectedRepairs"
+                            placeholder="Search for repair types"
+                            [required]="true"
+                            styleClass="w-full"
+                            (onSelect)="onRepairsSelect()"
+                            (onUnselect)="onRepairsSelect()"
+                        >
+                            <ng-template let-repair pTemplate="item">
+                                <div>{{ repair.label }} - {{ repair.cost | number: '1.0-0' }}</div>
+                            </ng-template>
+                            <ng-template let-repair pTemplate="selectedItem">
+                                <div>{{ repair.label }} - {{ repair.cost | number: '1.0-0' }}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <small class="text-red-500" *ngIf="submitted && (!selectedRepairs || selectedRepairs.length === 0)">At least one repair type is required.</small>
+                    </div>
 
-        <ng-template pTemplate="body" let-deposit>
-        <tr>
-            <td>
-            <p-tableCheckbox [value]="deposit"></p-tableCheckbox>
-            </td>
-            <td>{{ deposit.vehicleId }}</td>
-            <td>{{ deposit.typeReparationIds }}</td>
-            <td>{{ deposit.appointmentDate | date:'shortDate' }}</td>
-            <td>{{ deposit.clientId }}</td>
-            <td>{{ deposit.description }}</td>
-            <td>
-            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editDeposit(deposit)"></p-button>
-            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteDeposit(deposit)"></p-button>
-            </td>
-        </tr>
-        </ng-template>
+                    <div class="field mb-4">
+                        <label for="appointmentDate" class="font-bold mb-2 block">Appointment Date</label>
+                        <p-datePicker id="appointmentDate" [(ngModel)]="deposit.appointmentDate" [showIcon]="true" dateFormat="yy-mm-dd" [required]="true" styleClass="w-full" [appendTo]="'body'"></p-datePicker>
+                        <small class="text-red-500" *ngIf="submitted && !deposit.appointmentDate">Date is required.</small>
+                    </div>
 
-        <ng-template pTemplate="emptymessage">
-        <tr>
-            <td colspan="7">No deposits found.</td>
-        </tr>
-        </ng-template>
+                    <div class="field mb-4">
+                        <label for="description" class="font-bold mb-2 block">Description</label>
+                        <textarea id="description" pInputTextarea [(ngModel)]="deposit.description" rows="3" styleClass="w-full" fluid></textarea>
+                    </div>
 
-        <p-dialog [(visible)]="depositDialog" [style]="{'width': '450px'}" header="Deposit Details" [modal]="true">
-        <ng-template pTemplate="content">
-            <div class="p-fluid">
-            <div class="field">
-                <label for="vehicleId">Vehicle ID</label>
-                <p-dropdown 
-                    id="vehicleId"
-                    [options]="vehicles()"
-                    optionLabel="registrationNumber" 
-                    optionValue="_id"
-                    [(ngModel)]="deposit.vehicleId"
-                    placeholder="Select a Vehicle"
-                    required
-                    (onChange)="onSelectVehicle($event)">
-                    <ng-template let-vehicle pTemplate="item">
-                        <div>
-                            {{ vehicle.registrationNumber }} - {{ vehicle.model }} - {{ vehicle.color }}
-                        </div>
-                    </ng-template>
-                </p-dropdown>
-            </div>
-            <div class="field">
-                <label for="typeReparation">Type de Réparation</label>
-                <p-autoComplete
-                    [(ngModel)]="selectedTypeReparation"
-                    [suggestions]="filteredReparationTypes"
-                    (completeMethod)="filterReparationTypes($event)"
-                    (onSelect)="onSelect($event)"
-                    [dropdown]="true"
-                    [forceSelection]="true"
-                    [appendTo]="'body'"
-                    placeholder="Sélectionner un type de réparation"
-                    field="label" >
-                </p-autoComplete>
-
-                <small class="text-red-500" *ngIf="submitted && !deposit.typeReparationIds">
-                Type de réparation est requis.
-                </small>
-            </div>
-
-            <div class="field">
-                <label for="appointmentDate">Appointment Date</label>
-                <input id="appointmentDate" type="date" pInputText [(ngModel)]="deposit.appointmentDate" required />
-            </div>
-            <div class="field">
-                <label for="description">Description</label>
-                <textarea id="description" pInputTextarea [(ngModel)]="deposit.description"></textarea>
-            </div>  
-            </div>
-        </ng-template>
-        <ng-template pTemplate="footer">
-            <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()"></p-button>
-            <p-button label="Save" icon="pi pi-check" (click)="saveDeposit()"></p-button>
-        </ng-template>
+                    <div class="field mb-4 text-right">
+                        <span class="font-bold">Total Price: </span>
+                        <span class="text-xl">{{ calculateSelectedTotal() | number: '1.0-0' }} Ar</span>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <p-button label="Cancel" icon="pi pi-times" (onClick)="hideDialog()" styleClass="p-button-text"></p-button>
+                <p-button label="Save" icon="pi pi-check" (onClick)="saveDeposit()"></p-button>
+            </ng-template>
         </p-dialog>
 
-        <p-confirmdialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmdialog>
-
+        <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
     `,
     providers: [MessageService, ConfirmationService]
-  })
-  
-  export class DepositCRUD extends ApiCalls implements OnInit {
-    filteredReparationTypes: any[] = [];
-    typesReparation: any[] = [];
-    selectedVehicle: any; 
-    selectedTypeReparation: string = '';
-    exportCSV() {
-        throw new Error('Method not implemented.');
-    }
-    handleFilter($event: Event,_t22: Table) {
-        throw new Error('Method not implemented.');
-    }
-    hideDialog() {
-        this.depositDialog = false;
-        this.submitted = false;
-    }
+})
+export class DepositCRUD extends ApiCalls implements OnInit {
     depositDialog: boolean = false;
     deposits = signal<Deposit[]>([]);
     vehicles = signal<Vehicle[]>([]);
     reparationTypes = signal<Reparation[]>([]);
-    deposit!: Deposit;
-    selectedDeposits!: Deposit[] | null;
+    deposit: any = {
+        vehicleId: '',
+        typeReparationIds: [],
+        appointmentDate: new Date()
+    };
+    selectedDeposits: Deposit[] | null = null;
     submitted: boolean = false;
     @ViewChild('dt') dt!: Table;
     id: string | null = null;
 
-    // Pour la gestion des filtres des véhicules
+    selectedVehicle: Vehicle | null = null;
     filteredVehicles: Vehicle[] = [];
-    filteredTypes: Reparation[] = [];
 
+    selectedRepairs: Reparation[] = [];
+    filteredRepairs: Reparation[] = [];
+    exportColumns!: ExportColumn[];
+    cols!: Column[];
     constructor(
         apiRoutes: ApiRoutes,
         private messageService: MessageService,
@@ -206,15 +231,24 @@ import { getUserId } from '../../../utils/utils';
 
     ngOnInit() {
         this.loadDeposits();
-        this.loadVehicles();  // Charger les véhicules pour l'utilisateur connecté
-        this.loadTypeReparations(); // Charger les types de réparation
+        this.loadVehicles();
+        this.loadTypeReparations();
+        this.cols = [
+            { field: 'vehicle', header: 'Vehicle' },
+            { field: 'repairTypes', header: 'Repair Types' },
+            { field: 'appointmentDateFormatted', header: 'Appointment Date' },
+            { field: 'description', header: 'Description' },
+            { field: 'totalPrice', header: 'Total Price' }
+        ];
+
+        this.exportColumns = this.cols.map((col) => ({ title: col.header, dataKey: col.field }));
     }
 
-    // Charge les dépôts existants
     loadDeposits() {
         this.apiRoutes.getDeposits().subscribe({
             next: (data) => {
-                this.deposits.set(data);
+                const transformedDeposits = data.map((deposit: any) => this.transformDeposit(deposit));
+                this.deposits.set(transformedDeposits);
             },
             error: (error) => {
                 this.messageService.add({
@@ -231,7 +265,6 @@ import { getUserId } from '../../../utils/utils';
     loadVehicles() {
         this.apiRoutes.getVehicleByClientId(this.id || '').subscribe({
             next: (data) => {
-                console.log("Véhicules chargés :", data); 
                 this.vehicles.set(data);
             },
             error: (error) => {
@@ -245,13 +278,10 @@ import { getUserId } from '../../../utils/utils';
             }
         });
     }
-    
 
-    // Charge les types de réparation
     loadTypeReparations() {
         this.apiRoutes.getReparations().subscribe({
             next: (data) => {
-                console.log("Données récupérées :", data);
                 this.reparationTypes.set(data);
             },
             error: (error) => {
@@ -266,24 +296,100 @@ import { getUserId } from '../../../utils/utils';
         });
     }
 
-    // Ouvre le dialogue pour ajouter un nouveau dépôt
+    getVehicleInfo(vehicleId: string): string {
+        const vehicle = this.vehicles().find((v) => v._id === vehicleId);
+        return vehicle ? `${vehicle.registrationNumber} - ${vehicle.model}` : 'Vehicle not found';
+    }
+
+    getReparationInfo(typeIds: Reparation[]): string {
+        if (!typeIds || !Array.isArray(typeIds)) {
+            return 'No repair types assigned';
+        }
+
+        return typeIds
+            .map((id) => {
+                const repType = this.reparationTypes().find((r) => r._id === id._id);
+                return repType ? repType.label : 'Unknown repair type';
+            })
+            .join(', ');
+    }
+
+    calculateTotalPrice(typeIds: Reparation[]): number {
+        if (!typeIds || !Array.isArray(typeIds)) {
+            return 0;
+        }
+
+        return typeIds.reduce((total, id) => {
+            const repType = this.reparationTypes().find((r) => r._id === id._id);
+            return total + (repType?.cost || 0);
+        }, 0);
+    }
+
+    calculateSelectedTotal(): number {
+        if (!this.selectedRepairs || this.selectedRepairs.length === 0) {
+            return 0;
+        }
+
+        return this.selectedRepairs.reduce((total, repair) => total + (repair.cost || 0), 0);
+    }
+
+    onGlobalFilter(table: Table, event: Event) {
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+
+    exportCSV() {
+        this.dt.exportCSV();
+    }
+
     openNew() {
-        this.deposit = { 
-            vehicleId: '', 
-            typeReparationIds: '', 
+        this.deposit = {
+            vehicleId: '',
+            typeReparationIds: [],
             appointmentDate: new Date()
         };
+        this.selectedVehicle = null;
+        this.selectedRepairs = [];
         this.submitted = false;
-        this.depositDialog = true;
-    }    
-
-    // Édite un dépôt existant
-    editDeposit(deposit: Deposit) {
-        this.deposit = { ...deposit };
         this.depositDialog = true;
     }
 
-    // Supprime les dépôts sélectionnés
+    editDeposit(deposit: Deposit) {
+        this.deposit = { ...deposit };
+
+        if (!Array.isArray(this.deposit.typeReparationIds)) {
+            this.deposit.typeReparationIds = [this.deposit.typeReparationIds].filter(Boolean);
+        }
+
+        if (this.deposit.appointmentDate && typeof this.deposit.appointmentDate === 'string') {
+            this.deposit.appointmentDate = new Date(this.deposit.appointmentDate);
+        }
+
+        this.selectedVehicle = this.vehicles().find((v) => v._id === this.deposit.vehicleId._id) || null;
+        this.selectedRepairs = this.reparationTypes().filter((repair) => this.deposit.typeReparationIds.map((typeReparation: Reparation) => typeReparation._id).includes(repair._id || ''));
+
+        this.depositDialog = true;
+    }
+
+    filterVehicles(event: any) {
+        const query = event.query.toLowerCase();
+        this.filteredVehicles = this.vehicles().filter((vehicle) => vehicle.registrationNumber.toLowerCase().includes(query) || vehicle.model.toLowerCase().includes(query) || (vehicle.color && vehicle.color.toLowerCase().includes(query)));
+    }
+
+    onVehicleSelect(event: any) {
+        if (event && event.value._id) {
+            this.deposit.vehicleId = event.value._id;
+        }
+    }
+
+    filterRepairs(event: any) {
+        const query = event.query.toLowerCase();
+        this.filteredRepairs = this.reparationTypes().filter((repair) => repair.label.toLowerCase().includes(query));
+    }
+
+    onRepairsSelect() {
+        this.deposit.typeReparationIds = this.selectedRepairs.map((repair) => repair._id || '');
+    }
+
     deleteSelectedDeposits() {
         this.confirmationService.confirm({
             message: 'Are you sure you want to delete the selected deposits?',
@@ -328,7 +434,6 @@ import { getUserId } from '../../../utils/utils';
         });
     }
 
-    // Supprime un dépôt spécifique
     deleteDeposit(deposit: Deposit) {
         this.confirmationService.confirm({
             message: 'Are you sure you want to delete this deposit?',
@@ -338,9 +443,9 @@ import { getUserId } from '../../../utils/utils';
                 this.apiRoutes.deleteDeposit(deposit._id!).subscribe({
                     next: () => {
                         this.deposits.set(this.deposits().filter((val) => val._id !== deposit._id));
-                        this.deposit = { 
-                            vehicleId: '', 
-                            typeReparationIds: '', 
+                        this.deposit = {
+                            vehicleId: '',
+                            typeReparationIds: [],
                             appointmentDate: new Date()
                         };
                         this.messageService.add({
@@ -364,43 +469,45 @@ import { getUserId } from '../../../utils/utils';
         });
     }
 
-    // Sauvegarde le dépôt (création ou modification)
+    hideDialog() {
+        this.depositDialog = false;
+        this.submitted = false;
+    }
+
+    transformDeposit(deposit: any): any {
+        return {
+            ...deposit,
+            vehicle: this.getVehicleInfo(deposit.vehicleId._id),
+            repairTypes: this.getReparationInfo(deposit.typeReparationIds),
+            appointmentDateFormatted: new Date(deposit.appointmentDate).toLocaleDateString(),
+            description: deposit.description || 'No description provided',
+            totalPrice: `${this.calculateTotalPrice(deposit.typeReparationIds).toLocaleString()} Ar`
+        };
+    }
+
     saveDeposit() {
         this.submitted = true;
-
-        if (this.deposit.vehicleId?.trim() && this.deposit.typeReparationIds?.trim() && this.deposit.appointmentDate) {
+        if (this.deposit.vehicleId && this.deposit.typeReparationIds.length > 0 && this.deposit.appointmentDate) {
             if (this.deposit._id) {
                 this.apiRoutes.putDeposit(this.deposit._id, this.deposit).subscribe({
                     next: (updatedDeposit) => {
-                        if (this.deposit._id) { // Vérification que _id est défini
-                            const index = this.findIndexById(this.deposit._id);
-                            let _deposits = this.deposits();
-                            if (index !== -1) {
-                                _deposits[index] = updatedDeposit;
-                                this.deposits.set([..._deposits]);
-                            }
-                    
-                            this.messageService.add({
-                                severity: 'success',
-                                summary: 'Success',
-                                detail: 'Deposit updated',
-                                life: 3000
-                            });
-                            this.depositDialog = false;
-                            this.deposit = { 
-                                vehicleId: '', 
-                                typeReparationIds: '', 
-                                appointmentDate: new Date()
-                            };
-                            this.loadDeposits();
-                        } else {
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Error',
-                                detail: 'Invalid deposit ID',
-                                life: 3000
-                            });
+                        const enrichedDeposit = this.transformDeposit(updatedDeposit);
+
+                        const index = this.findIndexById(this.deposit._id!);
+                        let _deposits = this.deposits();
+                        if (index !== -1) {
+                            _deposits[index] = enrichedDeposit;
+                            this.deposits.set([..._deposits]);
                         }
+
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'Deposit updated',
+                            life: 3000
+                        });
+            
+                        this.resetForm();
                     },
                     error: (error) => {
                         this.messageService.add({
@@ -413,85 +520,46 @@ import { getUserId } from '../../../utils/utils';
                     }
                 });
             } else {
-                this.apiRoutes
-                    .postDeposit(this.deposit)
-                    .subscribe({
-                        next: (newDeposit) => {
-                            this.messageService.add({
-                                severity: 'success',
-                                summary: 'Success',
-                                detail: 'Deposit created',
-                                life: 3000
-                            });
-                            this.depositDialog = false;
-                            this.deposit = { 
-                                vehicleId: '', 
-                                typeReparationIds: '', 
-                                appointmentDate: new Date()
-                            };
-                            this.loadDeposits();
-                        },
-                        error: (error) => {
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Error',
-                                detail: 'Failed to create deposit',
-                                life: 3000
-                            });
-                            console.error('Error creating deposit', error);
-                        }
-                    });
+                this.apiRoutes.postDeposit(this.deposit).subscribe({
+                    next: (newDeposit) => {
+                        const transformedDeposit = this.transformDeposit(newDeposit);
+
+                        this.deposits.set([...this.deposits(), transformedDeposit]);
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'Deposit created',
+                            life: 3000
+                        });
+                        this.resetForm();
+                    },
+                    error: (error) => {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Failed to create deposit',
+                            life: 3000
+                        });
+                        console.error('Error creating deposit', error);
+                    }
+                });
             }
         }
     }
 
-    // Recherche un dépôt par son ID
     findIndexById(id: string): number {
-        let index = -1;
-        for (let i = 0; i < this.deposits().length; i++) {
-            if (this.deposits()[i]._id === id) {
-                index = i;
-                break;
-            }
-        }
-        return index;
+        return this.deposits().findIndex((deposit) => deposit._id === id);
     }
 
-    // Filtre les véhicules en fonction du texte de recherche
-    filterVehicles(event: any) {
-        const query = event.query.toLowerCase();
-        const allVehicles = this.vehicles();
-        this.filteredVehicles = allVehicles.filter((vehicle) => vehicle.registrationNumber.toLowerCase().includes(query));
+    resetForm() {
+        this.deposit = {
+            vehicleId: '',
+            typeReparationIds: [],
+            appointmentDate: new Date()
+        };
+        this.selectedVehicle = null;
+        this.selectedRepairs = [];
+        this.depositDialog = false;
+        this.submitted = false;
     }
-
-    filterReparationTypes(event: any) {
-        console.log('Recherche:', event.query);
-        
-        const reparationTypesArray = this.reparationTypes();
-        
-        if (!reparationTypesArray || reparationTypesArray.length === 0) {
-            console.error("⚠️ Aucun type de réparation chargé !");
-            this.filteredReparationTypes = [];
-            return;
-        }
-    
-        this.filteredReparationTypes = reparationTypesArray.filter((type: any) =>
-            type.label?.toLowerCase().includes(event.query.toLowerCase())
-        );
-    
-        console.log("Résultats filtrés :", this.filteredReparationTypes);
-    }
-    
-
-    onSelect(selectedType: any) {
-        console.log('Type de réparation sélectionné :', selectedType);
-        this.selectedTypeReparation = selectedType._id; // Stocke l'ID et non le label
-    }
-
-    onSelectVehicle(event: any) {
-        console.log('Véhicule sélectionné :', event);
-        this.deposit.vehicleId = event.value?._id || event.value; 
-    }
-    
-    
 }

@@ -179,7 +179,7 @@ export class ApiRoutes {
     }
     
     getDepositById(id: string): Observable<any> {
-        return this.apiService.getCall(${this.depositUrl}/${id});
+        return this.apiService.getCall(`${this.depositUrl}/${id}`);
     }
     
     postDeposit(data: any): Observable<any> {
@@ -187,10 +187,10 @@ export class ApiRoutes {
     }
     
     putDeposit(id: string, data: any): Observable<any> {
-        return this.apiService.putCall(${this.depositUrl}/${id}, data);
+        return this.apiService.putCall(`${this.depositUrl}/${id}`, data);
     }
     
     deleteDeposit(id: string): Observable<any> {
-        return this.apiService.deleteCall(${this.depositUrl}/${id});
+        return this.apiService.deleteCall(`${this.depositUrl}/${id}`);
     }
 }

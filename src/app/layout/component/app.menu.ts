@@ -36,10 +36,17 @@ export class AppMenu {
                     label: 'Home',
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-                        { label: 'My Vehicle', icon: 'pi pi-fw pi-car', routerLink: ['/vehicle/crud'] },
+                        {
+                            label: 'vehicle',
+                            icon: 'pi pi-fw pi-car',
+                            items: [
+                                { label: 'My Vehicle', icon: 'pi pi-fw pi-car', routerLink: ['/vehicle/crud'] },
+                                { label: 'Deposit', icon: 'pi pi-fw pi-list', routerLink: ['/deposit/CRUD'] }
+                            ]
+                        },
                         { label: 'Update My Details', icon: 'pi pi-fw pi-user-edit', routerLink: ['/client/update'] }
                     ]
-                }
+                },
             ];
         } else if (type == 2) {
             return [
