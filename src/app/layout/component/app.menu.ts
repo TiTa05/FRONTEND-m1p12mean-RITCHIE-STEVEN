@@ -86,7 +86,8 @@ export class AppMenu {
                         items: [
                             { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/fleet/list'] }
                         ]
-                    }
+                    },
+                    { label: 'Expense', icon: 'pi pi-fw pi-dollar', routerLink: ['/expense/CRUD'] }
                 ]
             }
         ];

@@ -18,7 +18,8 @@ export const appRoutes: Routes = [
             { path: 'vehicle', loadChildren: () => import('./pages/vehicle/vehicle.routes') },
             { path: 'mechanic', loadChildren: () => import('./pages/mechanic/mechanic.routes') },
             { path: 'reparation', loadChildren: () => import('./pages/reparation/reparation.routes') },
-            { path: 'fleet', loadChildren: () => import('./pages/fleet/fleet.routes') }
+            { path: 'fleet', loadChildren: () => import('./pages/fleet/fleet.routes') },
+            { path: 'expense', loadChildren: () => import('./pages/expense/expense.routes') }
         ]
     },
     { path: 'notfound', component: Notfound },

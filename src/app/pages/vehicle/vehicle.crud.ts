@@ -118,14 +118,11 @@ import { getUserId } from '../../../utils/utils';
         <p-dialog [(visible)]="vehicleDialog" [style]="{ width: '450px' }" header="Vehicle Details" [modal]="true">
             <ng-template #content>
                 <div class="flex flex-col gap-6">
-                    <!-- Registration Number -->
                     <div class="flex flex-col">
                         <label for="registrationNumber" class="block font-bold mb-3">Registration Number</label>
                         <input type="text" pInputText id="registrationNumber" [(ngModel)]="vehicle.registrationNumber" class="w-full" required autofocus />
                         <small class="text-red-500" *ngIf="submitted && !vehicle.registrationNumber">Registration number is required.</small>
                     </div>
-
-                    <!-- Brand -->
                     <div class="flex flex-col">
                         <label for="brand" class="block font-bold mb-3">Brand</label>
                         <p-autoComplete
@@ -144,23 +141,19 @@ import { getUserId } from '../../../utils/utils';
                         <small class="text-red-500" *ngIf="submitted && !vehicle.brandId">Brand is required.</small>
                     </div>
 
-                    <!-- Model -->
                     <div class="flex flex-col">
                         <label for="model" class="block font-bold mb-3">Model</label>
                         <input type="text" pInputText id="model" [(ngModel)]="vehicle.model" class="w-full" required />
                         <small class="text-red-500" *ngIf="submitted && !vehicle.model">Model is required.</small>
                     </div>
 
-                    <!-- Color and Energy side by side -->
                     <div class="flex flex-row gap-4">
-                        <!-- Color -->
                         <div class="flex-1">
                             <label for="color" class="block font-bold mb-3">Color</label>
                             <input type="text" pInputText id="color" [(ngModel)]="vehicle.color" class="w-full" required />
                             <small class="text-red-500" *ngIf="submitted && !vehicle.color">Color is required.</small>
                         </div>
 
-                        <!-- Energy -->
                         <div class="flex-1">
                             <label for="energy" class="block font-bold mb-3">Energy</label>
                             <p-dropdown [options]="energyOptions" [(ngModel)]="vehicle.energy" id="energy" placeholder="Select Energy" [showClear]="true" [appendTo]="'body'" class="w-full"></p-dropdown>
