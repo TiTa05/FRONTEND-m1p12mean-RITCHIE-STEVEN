@@ -19,6 +19,7 @@ export const appRoutes: Routes = [
             { path: 'mechanic', loadChildren: () => import('./pages/mechanic/mechanic.routes') },
             { path: 'reparation', loadChildren: () => import('./pages/reparation/reparation.routes') },
             { path: 'fleet', loadChildren: () => import('./pages/fleet/fleet.routes') },
+            { path: 'deposit', loadChildren: () => import('./pages/deposit/deposit.routes') },
             { path: 'expense', loadChildren: () => import('./pages/expense/expense.routes') }
         ]
     },

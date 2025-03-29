@@ -17,6 +17,7 @@ export class ApiRoutes {
     private vehicleUrl = `${this.host}/vehicle`;
     private reparationUrl = `${this.host}/reparation`;
     private fleetUrl = `${this.host}/fleet`;
+    private depositUrl = `${this.host}/deposit`;
     private expenseUrl = `${this.host}/expense`;
 
     constructor(private apiService: ApiService) {}
@@ -169,5 +170,27 @@ export class ApiRoutes {
     
     deleteExpense(id: string): Observable<any> {
         return this.apiService.deleteCall(`${this.expenseUrl}/${id}`);
+    }
+
+     // Deposit
+
+     getDeposits(): Observable<any> {
+        return this.apiService.getCall(this.depositUrl);
+    }
+    
+    getDepositById(id: string): Observable<any> {
+        return this.apiService.getCall(${this.depositUrl}/${id});
+    }
+    
+    postDeposit(data: any): Observable<any> {
+        return this.apiService.postCall(this.depositUrl, data);
+    }
+    
+    putDeposit(id: string, data: any): Observable<any> {
+        return this.apiService.putCall(${this.depositUrl}/${id}, data);
+    }
+    
+    deleteDeposit(id: string): Observable<any> {
+        return this.apiService.deleteCall(${this.depositUrl}/${id});
     }
 }
