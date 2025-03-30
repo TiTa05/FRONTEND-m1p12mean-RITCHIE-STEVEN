@@ -77,14 +77,15 @@ export class AppMenu {
                         label: 'Vehicle',
                         icon: 'pi pi-fw pi-car',
                         items: [
-                            { label: 'Brand', icon: 'pi pi-fw pi-tag', routerLink: ['/vehicle/brand'] }
+                            { label: 'Brand', icon: 'pi pi-fw pi-tag', routerLink: ['/vehicle/brand'] },
+                            { label: 'Deposit', icon: 'pi pi-fw pi-list', routerLink: ['/deposit/list'] }
                         ]
                     },
                     {
                         label: 'Reparation Type',
                         icon: 'pi pi-fw pi-wrench',
                         items: [
-                            { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/CRUD'] }
+                            { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/reparationType/CRUD'] }
                         ]
                     },
                     {

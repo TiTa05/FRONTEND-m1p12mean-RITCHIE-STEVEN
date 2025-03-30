@@ -24,6 +24,7 @@ import { ApiCalls } from '../../api/api-calls.abstractclass';
 import { Component, OnInit, ViewChild, signal, computed } from '@angular/core';
 import { getUserId } from '../../../utils/utils';
 import { ExportColumn, Column } from '../../models/crud-component.interface';
+import { ReparationRejectedList } from '../reparation/reparation-rejected.list';
 @Component({
     selector: 'app-deposit-crud',
     standalone: true,
@@ -44,7 +45,8 @@ import { ExportColumn, Column } from '../../models/crud-component.interface';
         DropdownModule,
         DatePickerModule,
         InputTextarea,
-        MultiSelectModule
+        MultiSelectModule,
+        ReparationRejectedList
     ],
     template: `
         <p-toast></p-toast>
@@ -194,6 +196,9 @@ import { ExportColumn, Column } from '../../models/crud-component.interface';
         </p-dialog>
 
         <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+        <div class='mt-10'>
+            <app-reparation-rejected-list></app-reparation-rejected-list>
+        </div>
     `,
     providers: [MessageService, ConfirmationService]
 })
@@ -245,7 +250,7 @@ export class DepositCRUD extends ApiCalls implements OnInit {
     }
 
     loadDeposits() {
-        this.apiRoutes.getDeposits().subscribe({
+        this.apiRoutes.getUnassignedDepositsByClient(this.id || '').subscribe({
             next: (data) => {
                 const transformedDeposits = data.map((deposit: any) => this.transformDeposit(deposit));
                 this.deposits.set(transformedDeposits);
@@ -280,7 +285,7 @@ export class DepositCRUD extends ApiCalls implements OnInit {
     }
 
     loadTypeReparations() {
-        this.apiRoutes.getReparations().subscribe({
+        this.apiRoutes.getReparationsType().subscribe({
             next: (data) => {
                 this.reparationTypes.set(data);
             },

@@ -15,10 +15,11 @@ export class ApiRoutes {
     private articleUrl = `${this.host}/articles`;
     private brandUrl = `${this.host}/brand`;
     private vehicleUrl = `${this.host}/vehicle`;
-    private reparationUrl = `${this.host}/reparation`;
+    private reparationTypeUrl = `${this.host}/reparationType`;
     private fleetUrl = `${this.host}/fleet`;
     private depositUrl = `${this.host}/deposit`;
     private expenseUrl = `${this.host}/expense`;
+    private reparationUrl = `${this.host}/reparation`;
 
     constructor(private apiService: ApiService) {}
 
@@ -85,6 +86,10 @@ export class ApiRoutes {
     putMechanic(id: string, data: any): Observable<any> {
         return this.apiService.putCall(`${this.mechanicUrl}/${id}`, data);
     }
+
+    getAvailableMechanics(): Observable<any> {
+        return this.apiService.getCall(`${this.mechanicUrl}/available-mechanics`);
+    }
     // user
     deleteUSer(id: string): Observable<any> {
         return this.apiService.deleteCall(`${this.userUrl}/${id}`);
@@ -122,24 +127,24 @@ export class ApiRoutes {
         return this.apiService.deleteCall(`${this.articleUrl}/${id}`);
     }
     // reparation type
-    getReparations(): Observable<any> {
-        return this.apiService.getCall(this.reparationUrl);
+    getReparationsType(): Observable<any> {
+        return this.apiService.getCall(this.reparationTypeUrl);
     }
     
-    getReparationById(id: string): Observable<any> {
-        return this.apiService.getCall(`${this.reparationUrl}/${id}`);
+    getReparationTypeById(id: string): Observable<any> {
+        return this.apiService.getCall(`${this.reparationTypeUrl}/${id}`);
     }
     
-    postReparation(data: any): Observable<any> {
-        return this.apiService.postCall(this.reparationUrl, data);
+    postReparationType(data: any): Observable<any> {
+        return this.apiService.postCall(this.reparationTypeUrl, data);
     }
     
-    putReparation(id: string, data: any): Observable<any> {
-        return this.apiService.putCall(`${this.reparationUrl}/${id}`, data);
+    putReparationType(id: string, data: any): Observable<any> {
+        return this.apiService.putCall(`${this.reparationTypeUrl}/${id}`, data);
     }
     
-    deleteReparation(id: string): Observable<any> {
-        return this.apiService.deleteCall(`${this.reparationUrl}/${id}`);
+    deleteReparationType(id: string): Observable<any> {
+        return this.apiService.deleteCall(`${this.reparationTypeUrl}/${id}`);
     }
 
     // fleet
@@ -151,6 +156,13 @@ export class ApiRoutes {
         return this.apiService.getCall(`${this.fleetUrl}/clear-vehicles`);
     }
 
+    getAvailableFleet(): Observable<any> {
+        return this.apiService.getCall(`${this.fleetUrl}/available`);
+    }
+
+    putFleet(id: string, data: any): Observable<any> {
+        return this.apiService.putCall(`${this.fleetUrl}/${id}`, data);
+    }
     //expense
     getExpenses(): Observable<any> {
         return this.apiService.getCall(this.expenseUrl);
@@ -172,9 +184,9 @@ export class ApiRoutes {
         return this.apiService.deleteCall(`${this.expenseUrl}/${id}`);
     }
 
-     // Deposit
+    // Deposit
 
-     getDeposits(): Observable<any> {
+    getDeposits(): Observable<any> {
         return this.apiService.getCall(this.depositUrl);
     }
     
@@ -192,5 +204,36 @@ export class ApiRoutes {
     
     deleteDeposit(id: string): Observable<any> {
         return this.apiService.deleteCall(`${this.depositUrl}/${id}`);
+    }
+
+    getUnassignedDeposits(): Observable<any> {
+        return this.apiService.getCall(`${this.depositUrl}/unassigned`);
+    }
+    getUnassignedDepositsByClient(id: string): Observable<any> {
+        return this.apiService.getCall(`${this.depositUrl}/client/${id}`);
+    }
+    // reparation type
+    getReparations(): Observable<any> {
+        return this.apiService.getCall(this.reparationUrl);
+    }
+    
+    getReparationById(id: string): Observable<any> {
+        return this.apiService.getCall(`${this.reparationUrl}/${id}`);
+    }
+    
+    postReparation(data: any): Observable<any> {
+        return this.apiService.postCall(this.reparationUrl, data);
+    }
+    
+    putReparation(id: string, data: any): Observable<any> {
+        return this.apiService.putCall(`${this.reparationUrl}/${id}`, data);
+    }
+    
+    deleteReparation(id: string): Observable<any> {
+        return this.apiService.deleteCall(`${this.reparationUrl}/${id}`);
+    }
+
+    getReparationRejectedByClientId(clientId: string): Observable<any> {
+        return this.apiService.getCall(`${this.reparationUrl}/rejected/${clientId}`);
     }
 }

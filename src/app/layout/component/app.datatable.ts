@@ -192,7 +192,7 @@ export interface ColumnDefinition {
                                     </ng-container>
 
                                     <ng-container *ngSwitchCase="'date'">
-                                        {{ resolveFieldValue(rowData, col.field) | date: 'dd/MM/yyyy' }}
+                                        {{ resolveFieldValue(rowData, col.field) | date: 'mediumDate' }}
                                     </ng-container>
 
                                     <ng-container *ngSwitchCase="'currency'"> {{ resolveFieldValue(rowData, col.field) | number: '1.2-2' }} Ar </ng-container>
