@@ -58,7 +58,9 @@ import { ApiCalls } from '../../api/api-calls.abstractclass';
                             <div class="text-center mt-6">
                                 <span class="text-muted-color">Don't have an account?</span>
                                 <a class="font-medium text-primary cursor-pointer ml-2" (click)="navigateToSignUp()">Sign Up</a>
-                                <span class="text-muted-color"> ( for client )</span>
+                                <div class="text-center mt-3">
+                                    <a class="font-medium text-primary cursor-pointer" (click)="navigateToForgotPassword()">Forgot Password?</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -92,7 +94,7 @@ export class Login extends ApiCalls {
                 this.password = 'Qwerty123';
                 break;
             case 'mechanic':
-                this.email = 'venhom@gmail.com';
+                this.email = 'stevenmahery@gmail.com';
                 this.password = 'Qwerty123';
                 break;
             case 'client':
@@ -126,4 +128,9 @@ export class Login extends ApiCalls {
     navigateToSignUp() {
         this.router.navigate(['/auth/signUp']);
     }
+
+    navigateToForgotPassword() {
+        this.router.navigate(['/auth/forgot-password']);
+    }
+    
 }
