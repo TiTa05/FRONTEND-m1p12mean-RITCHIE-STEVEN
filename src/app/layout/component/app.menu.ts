@@ -54,7 +54,8 @@ export class AppMenu {
                     label: 'Home',
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-                        { label: 'Update My Password', icon: 'pi pi-fw pi-user-edit', routerLink: ['/mechanic/update'] }
+                        { label: 'Reparations list', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/list'] },
+                        { label: 'Update My Password', icon: 'pi pi-fw pi-user-edit', routerLink: ['/mechanic/update'] },
                     ]
                 }
             ];
@@ -85,7 +86,7 @@ export class AppMenu {
                         label: 'Reparation Type',
                         icon: 'pi pi-fw pi-wrench',
                         items: [
-                            { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/reparationType/CRUD'] }
+                            { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/type/CRUD'] },
                         ]
                     },
                     {

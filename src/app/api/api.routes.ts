@@ -236,4 +236,8 @@ export class ApiRoutes {
     getReparationRejectedByClientId(clientId: string): Observable<any> {
         return this.apiService.getCall(`${this.reparationUrl}/rejected/${clientId}`);
     }
+
+    getReparationAssignedToAMechanic(mechanicId: string): Observable<any> {
+        return this.apiService.getCall(`${this.reparationUrl}/mechanics/${mechanicId}`);
+    }
 }

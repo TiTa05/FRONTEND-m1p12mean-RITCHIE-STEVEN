@@ -13,7 +13,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ApiRoutes } from '../../api/api.routes';
-import { Reparation } from '../../models/reparation.interface';
+import { ReparationType } from '../../models/reparation.interface';
 import { Column, ExportColumn } from '../../models/crud-component.interface';
 
 @Component({
@@ -126,9 +126,9 @@ import { Column, ExportColumn } from '../../models/crud-component.interface';
 })
 export class ReparationTypeCRUD implements OnInit {
     reparationDialog: boolean = false;
-    reparations = signal<Reparation[]>([]);
-    reparation: Reparation = { label: '', cost: 0 };
-    selectedReparations: Reparation[] | null = null;
+    reparations = signal<ReparationType[]>([]);
+    reparation: ReparationType = { label: '', cost: 0 };
+    selectedReparations: ReparationType[] | null = null;
     submitted: boolean = false;
     @ViewChild('dt') dt!: Table;
     cols!: Column[];
@@ -155,7 +155,7 @@ export class ReparationTypeCRUD implements OnInit {
 
     loadReparations(): void {
         this.apiRoutes.getReparationsType().subscribe({
-            next: (data: Reparation[]) => {
+            next: (data: ReparationType[]) => {
                 this.reparations.set(data);
             },
             error: (err) => {
@@ -176,12 +176,12 @@ export class ReparationTypeCRUD implements OnInit {
         this.reparationDialog = true;
     }
 
-    editReparation(reparation: Reparation): void {
+    editReparation(reparation: ReparationType): void {
         this.reparation = { ...reparation };
         this.reparationDialog = true;
     }
 
-    deleteReparation(reparation: Reparation): void {
+    deleteReparation(reparation: ReparationType): void {
         this.confirmationService.confirm({
             message: `Are you sure you want to delete ${reparation.label}?`,
             header: 'Confirmation',

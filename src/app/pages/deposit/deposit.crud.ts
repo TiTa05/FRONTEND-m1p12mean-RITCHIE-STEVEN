@@ -12,7 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ApiRoutes } from '../../api/api.routes';
 import { Deposit } from '../../models/deposit.interface';
 import { Vehicle } from '../../models/vehicle.interface';
-import { Reparation } from '../../models/reparation.interface';
+import { ReparationType } from '../../models/reparation.interface';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DropdownModule } from 'primeng/dropdown';
@@ -206,7 +206,7 @@ export class DepositCRUD extends ApiCalls implements OnInit {
     depositDialog: boolean = false;
     deposits = signal<Deposit[]>([]);
     vehicles = signal<Vehicle[]>([]);
-    reparationTypes = signal<Reparation[]>([]);
+    reparationTypes = signal<ReparationType[]>([]);
     deposit: any = {
         vehicleId: '',
         typeReparationIds: [],
@@ -220,8 +220,8 @@ export class DepositCRUD extends ApiCalls implements OnInit {
     selectedVehicle: Vehicle | null = null;
     filteredVehicles: Vehicle[] = [];
 
-    selectedRepairs: Reparation[] = [];
-    filteredRepairs: Reparation[] = [];
+    selectedRepairs: ReparationType[] = [];
+    filteredRepairs: ReparationType[] = [];
     exportColumns!: ExportColumn[];
     cols!: Column[];
     constructor(
@@ -306,7 +306,7 @@ export class DepositCRUD extends ApiCalls implements OnInit {
         return vehicle ? `${vehicle.registrationNumber} - ${vehicle.model}` : 'Vehicle not found';
     }
 
-    getReparationInfo(typeIds: Reparation[]): string {
+    getReparationInfo(typeIds: ReparationType[]): string {
         if (!typeIds || !Array.isArray(typeIds)) {
             return 'No repair types assigned';
         }
@@ -319,7 +319,7 @@ export class DepositCRUD extends ApiCalls implements OnInit {
             .join(', ');
     }
 
-    calculateTotalPrice(typeIds: Reparation[]): number {
+    calculateTotalPrice(typeIds: ReparationType[]): number {
         if (!typeIds || !Array.isArray(typeIds)) {
             return 0;
         }
@@ -370,7 +370,7 @@ export class DepositCRUD extends ApiCalls implements OnInit {
         }
 
         this.selectedVehicle = this.vehicles().find((v) => v._id === this.deposit.vehicleId._id) || null;
-        this.selectedRepairs = this.reparationTypes().filter((repair) => this.deposit.typeReparationIds.map((typeReparation: Reparation) => typeReparation._id).includes(repair._id || ''));
+        this.selectedRepairs = this.reparationTypes().filter((repair) => this.deposit.typeReparationIds.map((typeReparation: ReparationType) => typeReparation._id).includes(repair._id || ''));
 
         this.depositDialog = true;
     }

@@ -82,7 +82,6 @@ export class ReparationRejectedList extends ApiCalls implements OnInit {
     loadReparationRejected() {
         this.apiRoutes.getReparationRejectedByClientId(this.id || '').subscribe({
             next: (data) => {
-                console.log(data)
                 const transformedData = data.map((reparation: any) => ({
                     ...reparation,
                     vehicleRegistration: reparation.depositId?.vehicleId?.registrationNumber || 'N/A',
