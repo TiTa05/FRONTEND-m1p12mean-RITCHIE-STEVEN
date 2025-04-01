@@ -189,7 +189,7 @@ import { AdditionalCost, Reparation } from '../../models/reparation.interface';
             <div class="flex flex-col gap-6">
                 <div>
                     <label for="completionDate" class="block font-bold mb-3">Completion Date</label>
-                    <p-datePicker [(ngModel)]="completionDate" [showIcon]="true" inputId="completionDate" dateFormat="yy-mm-dd" [required]="true" class="w-full"></p-datePicker>
+                    <p-datePicker [(ngModel)]="completionDate" [showIcon]="true" inputId="completionDate" dateFormat="yy-mm-dd" [required]="true" class="w-full" [appendTo]="'body'" fluid></p-datePicker>
                 </div>
             </div>
             <ng-template pTemplate="footer">
