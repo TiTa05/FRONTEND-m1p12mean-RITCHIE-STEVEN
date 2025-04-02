@@ -132,6 +132,6 @@ export class ReparationAssignedMechanicList extends ApiCalls implements OnInit {
     }
 
     onComplete(reparation: any) {
-        this.router.navigate(['/reparation/reparation-details', reparation._id]);
+        this.router.navigate(['/reparation/reparation-details-mechanic', reparation._id]);
     }
 }

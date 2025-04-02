@@ -240,4 +240,12 @@ export class ApiRoutes {
     getReparationAssignedToAMechanic(mechanicId: string): Observable<any> {
         return this.apiService.getCall(`${this.reparationUrl}/mechanics/${mechanicId}`);
     }
+
+    getReparationByStatus(status: string): Observable<any> {
+        return this.apiService.getCall(`${this.reparationUrl}/status/${status}`);
+    }
+
+    getReparationByStatusAndClient(status: string, clientId: string): Observable<any> {
+        return this.apiService.getCall(`${this.reparationUrl}/status/${status}/client/${clientId}`);
+    }
 }

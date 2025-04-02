@@ -201,7 +201,7 @@ import { AdditionalCost, Reparation } from '../../models/reparation.interface';
     `,
     providers: [MessageService, ConfirmationService]
 })
-export class ReparationDetailsComponent implements OnInit {
+export class ReparationDetailsMechanicComponent implements OnInit {
     reparationId: string = '';
     reparation = signal<Reparation | null>(null);
     additionalCosts = signal<AdditionalCost[]>([]);

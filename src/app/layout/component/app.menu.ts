@@ -44,6 +44,7 @@ export class AppMenu {
                                 { label: 'Deposit', icon: 'pi pi-fw pi-list', routerLink: ['/deposit/CRUD'] }
                             ]
                         },
+                        { label: 'Reparation Finished', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/reparation-recoverd'] },
                         { label: 'Update My Details', icon: 'pi pi-fw pi-user-edit', routerLink: ['/client/update'] }
                     ]
                 },
@@ -83,10 +84,11 @@ export class AppMenu {
                         ]
                     },
                     {
-                        label: 'Reparation Type',
+                        label: 'Reparation',
                         icon: 'pi pi-fw pi-wrench',
                         items: [
-                            { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/type/CRUD'] },
+                            { label: 'Reparation Type', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/type/CRUD'] },
+                            { label: 'Reparation Finished', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/reparation-recoverd'] },
                         ]
                     },
                     {
