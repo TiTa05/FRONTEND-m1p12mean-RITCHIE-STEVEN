@@ -6,8 +6,8 @@ import { ApiService } from './api.service';
 @Injectable({
     providedIn: 'root'
 })
-export class ApiRoutes {
-    private host = 'http://localhost:5000';
+export class ApiRoutes { 
+    private host = 'https://backend-m1p12mean-ritchie-steven.onrender.com';
     private loginUrl = `${this.host}/auth/login`;
     private clientUrl = `${this.host}/auth/client`;
     private mechanicUrl = `${this.host}/auth/mechanic`;
