@@ -200,16 +200,19 @@ export class ReparationDetailsComponent implements OnInit {
                 const imgData = canvas.toDataURL('image/png');
 
                 doc.addImage(imgData, 'PNG', 10, 10, 60, 18);
-
+    
                 const invoiceDate = rep.recoveredAt
-                    ? new Date(rep.recoveredAt).toLocaleDateString(undefined, { dateStyle: 'medium' })
-                    : 'N/A';
+                ? new Date(rep.recoveredAt).toLocaleDateString(undefined, { dateStyle: 'medium' })
+                : 'N/A';
+            
+                const invoiceNumber = rep['invoiceNumber'] || 'N/A';
                 doc.setFontSize(12);
                 doc.text(`Invoice Date: ${invoiceDate}`, 200, 10, { align: 'right' });
+                doc.text(`Invoice Number: ${invoiceNumber}`, 200, 20, { align: 'right' });
 
                 doc.setFontSize(22);
                 doc.text('Invoice Details', 10, 50);
-
+    
                 doc.setFontSize(14);
                 doc.text(`Client: ${this.getClientName()}`, 10, 70);
                 doc.text(`Vehicle: ${this.getVehicleInfo()}`, 10, 80);
@@ -227,7 +230,7 @@ export class ReparationDetailsComponent implements OnInit {
                 ]);
     
                 let finalY = 100;
-
+    
                 const tableTheme = {
                     headStyles: {
                         fillColor: [16, 185, 129], 

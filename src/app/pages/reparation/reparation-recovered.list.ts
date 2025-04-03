@@ -88,6 +88,12 @@ export class ReparationRecoveredList extends ApiCalls implements OnInit {
             style: { 'min-width': '12rem' }
         },
         {
+            field: 'invoiceNumber',
+            header: 'Invoice',
+            filterType: 'text',
+            style: { 'min-width': '12rem' }
+        },
+        {
             field: 'details',
             header: 'Details',
             template: 'details',
