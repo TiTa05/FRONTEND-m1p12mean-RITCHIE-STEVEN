@@ -212,7 +212,7 @@ export class ApiRoutes {
     getUnassignedDepositsByClient(id: string): Observable<any> {
         return this.apiService.getCall(`${this.depositUrl}/client/${id}`);
     }
-    // reparation type
+    // reparation
     getReparations(): Observable<any> {
         return this.apiService.getCall(this.reparationUrl);
     }
@@ -240,6 +240,11 @@ export class ApiRoutes {
     getReparationAssignedToAMechanic(mechanicId: string): Observable<any> {
         return this.apiService.getCall(`${this.reparationUrl}/mechanics/${mechanicId}`);
     }
+
+    getReparationAssignedToAClient(clientId: string): Observable<any> {
+        return this.apiService.getCall(`${this.reparationUrl}/client/${clientId}`);
+    }
+
 
     getReparationByStatus(status: string): Observable<any> {
         return this.apiService.getCall(`${this.reparationUrl}/status/${status}`);

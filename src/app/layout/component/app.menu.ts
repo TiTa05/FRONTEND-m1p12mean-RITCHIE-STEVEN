@@ -44,6 +44,7 @@ export class AppMenu {
                                 { label: 'Deposit', icon: 'pi pi-fw pi-list', routerLink: ['/deposit/CRUD'] }
                             ]
                         },
+                        { label: 'Repair progress', icon: 'pi pi-fw pi-hourglass', routerLink: ['reparation/reparation-client-list'] },
                         { label: 'Reparation Finished', icon: 'pi pi-fw pi-list', routerLink: ['/reparation/reparation-recoverd'] },
                         { label: 'Update My Details', icon: 'pi pi-fw pi-user-edit', routerLink: ['/client/update'] }
                     ]
@@ -98,6 +99,7 @@ export class AppMenu {
                             { label: 'Type', icon: 'pi pi-fw pi-list', routerLink: ['/fleet/list'] }
                         ]
                     },
+                    { label: 'Repair progress', icon: 'pi pi-fw pi-hourglass', routerLink: ['reparation/reparation-manager-list'] },
                     { label: 'Expense', icon: 'pi pi-fw pi-dollar', routerLink: ['/expense/CRUD'] }
                 ]
             }
